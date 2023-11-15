@@ -1,12 +1,29 @@
-import type { MetaFunction } from "@remix-run/node";
-import { Link } from "@remix-run/react";
+import {
+  json,
+  type LoaderFunctionArgs,
+  type MetaFunction,
+} from "@remix-run/node";
+import { Link, useLoaderData } from "@remix-run/react";
 
+import { getImageListItems } from "~/models/image.server";
+import { getUserId } from "~/session.server";
 import { useOptionalUser } from "~/utils";
 
 export const meta: MetaFunction = () => [{ title: "Remix Notes" }];
 
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const userId = await getUserId(request);
+  if (!userId) return json({ images: [] });
+
+  const images = await getImageListItems({ userId });
+
+  return json({ images });
+};
+
 export default function Index() {
   const user = useOptionalUser();
+  const { images } = useLoaderData<typeof loader>();
+
   return (
     <main className="relative min-h-screen bg-white sm:flex sm:items-center sm:justify-center">
       <div className="relative sm:pb-16 sm:pt-8">
@@ -30,6 +47,16 @@ export default function Index() {
                 Check the README.md file for instructions on how to get this
                 project deployed.
               </p>
+              {user
+                ? images.map((image) => (
+                    <p
+                      key={image.id}
+                      className="mx-auto mt-6 max-w-lg text-center text-xl text-white sm:max-w-3xl"
+                    >
+                      {image.id}
+                    </p>
+                  ))
+                : null}
               <div className="mx-auto mt-10 max-w-sm sm:flex sm:max-w-none sm:justify-center">
                 {user ? (
                   <Link

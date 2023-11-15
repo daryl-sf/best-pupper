@@ -3,11 +3,8 @@ best-pupper-1957
 
 @aws
 runtime nodejs18.x
-# concurrency 1
-# memory 1152
-# profile default
-# region us-west-1
-# timeout 30
+region eu-west-1
+timeout 30
 
 @http
 /*
@@ -30,3 +27,7 @@ password
 note
   pk *String  # userId
   sk **String # noteId
+
+image
+  pk *String  # userId
+  sk **String # imageId
