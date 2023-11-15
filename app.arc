@@ -1,5 +1,5 @@
 @app
-grunge-stack-template
+best-pupper-1957
 
 @aws
 runtime nodejs18.x
